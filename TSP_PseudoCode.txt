@@ -1,0 +1,43 @@
+read txt files, convert contents to list
+    for name in city_names
+        append name to a list of names
+
+    for line in distances_file
+        for distance in line
+            append distance to list of distances
+        append list of distances to main distance list
+
+create a main dictionary to store all city's and distances
+    for city in city_list
+        create dictionary entry where key is city_name and value is list
+        of distances
+
+HELPER FUNCTIONS
+    count_distance
+
+Greedy
+    have a starting city
+    make a tour list
+    initialize total_distance and lowest_distance
+    current city is last item of tour list
+    ??lowest distance = 13001?
+
+    list of distances is the value in the main dictionary represented by
+    the current city
+
+    while there are cities that have not been seen
+        for distance in current city distance list
+            if distance is in tour list
+                none
+            elif distance not in tour list
+                new_distance
+
+            if new distance less than lowest distance
+                lowest distance is the new distance
+                add lowest distance to total distance
+
+Mutation
+    create base case that visits each city in order
+
+
+
