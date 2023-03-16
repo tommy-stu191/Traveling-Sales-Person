@@ -1,4 +1,6 @@
-read txt files, convert contents to list
+INTRO FUNCTIONS
+
+Read-in text files, convert contents to list
     for name in city_names
         append name to a list of names
 
@@ -7,7 +9,7 @@ read txt files, convert contents to list
             append distance to list of distances
         append list of distances to main distance list
 
-create a main dictionary to store all city's and distances
+Create a main dictionary to store all city's and distances
     for city in city_list
         create dictionary entry where key is city_name and value is list
         of distances
@@ -15,7 +17,7 @@ create a main dictionary to store all city's and distances
 HELPER FUNCTIONS
     count_distance
 
-Greedy
+GREEDY
     have a starting city
     make a tour list
     initialize total_distance and lowest_distance
@@ -28,16 +30,64 @@ Greedy
     while there are cities that have not been seen
         for distance in current city distance list
             if distance is in tour list
-                none
+                then do none
             elif distance not in tour list
-                new_distance
+                then distance is new_distance
 
             if new distance less than lowest distance
-                lowest distance is the new distance
-                add lowest distance to total distance
+                then lowest distance is the new distance
+                then add lowest distance to total distance
 
-Mutation
-    create base case that visits each city in order
+MUTATION
+    Data will be in the dictionary form:
+        dict = {city1:[list of distances], city2:[list of distances], ...}
+
+    Initialize:
+        create base case that visits each city in order
+
+    Mutate:
+        randomly select two cities using 'random' package
+        swap the order of city 1 and city 2
+            To ensure the change is a new solution,
+            potentially only swap the second or last element
+            with an "inside" element
+
+    Select:
+        May be beneficial to keep track of the best (lowest weight)
+        route when going through mutations, rather than testing after.
+
+        Fitness Test:
+            total distance is initialized as 0
+
+            for city in route:
+                current_index = route.index(city)
+                next_city = route(current_index + 1)
+
+                one_distance = dict(current_index)  --->>>  returns the list of distances for the currently selected city
+                total_distance += one_distance
+
+        If the mutation "stagnates" (no fitness improvement),
+            then mutate the parent as defined earlier in the function
+            keep track of this parent,
+
+    Terminate:
+        once we stagnate five times and have five recorded stagnations,
+            then we stop mutating.
+
+        The best of the five final mutations is kept.
 
 
+BACKTRACKING
+    store best solution as we go, no need to store all solutions
 
+    Eliminate redundancy
+        rotations describe the same route
+        flips also describe the same route
+
+        to eliminate rotations, we can make every route begin with city 1
+
+        to eliminate flips...
+               something to do with c1c2....c6 == c1c6....c2
+
+        Once we eliminate these redundancies,
+            this is a typical backtracking problem
