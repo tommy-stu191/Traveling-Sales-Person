@@ -88,6 +88,10 @@ BACKTRACKING
 
         to eliminate flips...
                something to do with c1c2....c6 == c1c6....c2
+               we could extract c2 and c6 from each route,
+               then make sure that the SMALLER OF THE TWO is in the
+               second element position,
+               and the LARGER element is in the last position
 
         Once we eliminate these redundancies,
             this is a typical backtracking problem
