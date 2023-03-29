@@ -82,67 +82,75 @@ def count_distance(tour_list, cities_dictionary):
     return total_distance
 
 
-def is_in_tour_list(cities, tour, city_idx):
+def valid_tour_list(cities, tour, distance_idx):
     """
-    Checks if the shortest_distance index is apart of a previously used city in a tour.
+    Checks if the shortest_distance index is a part of a previously used city in a tour.
     
     :param cities: City/Distance dictionary
     :param tour: Current tour
-    :param city_idx: index of potential next city in dictionary value list
+    :param distance_idx: index of potential next city in dictionary value list
     :return:
     """
-    current_city = list(cities.items())[city_idx][0]
+    current_city = list(cities.items())[distance_idx][0]
     if current_city in tour:
-        return True
-    return False
+        return False
+    return True
 
 
 def tsp_greedy(name_file, distance_file):
+    """
+    Implements greedy search algorithm in order to solve Traveling Sales Person problem
+    :str name_file: location of city names .txt file
+    :str distance_file: location of distance .txt file
+    :return:
+    """
     # Convert files to usable data
-    # --> txt_files_to_dict()
     cities = txt_files_to_dict(name_file, distance_file)
     # Initializing tour with starting city
     tour = list()
     tour.append(list(cities.keys())[0])
 
+    # Main loop - builds tsp tour solution with greedy implementation
     while len(tour) < len(cities):
-        print(f'Tour contains: {tour}')
-        shortest_path = 130000
+        # Updating/Initializing shortest_path & current_city
+        shortest_path = 13000
         current_city = tour[-1]
-        for distance in cities.get(current_city):
+        # Looping through all distance values within current_city in cities dictionary
+        for distance_idx in range(0, len(cities.get(current_city))):
+            # checking current distance based on idx
+            current_dist = cities.get(current_city)[distance_idx]
 
-            # potential methods of determining if smallest dist found is not in tour list yet
-            # A) Keep track of used index values >> pass over used idxs when
-            # finding next shortest distance(starting with idx 0 for alpha)
-            #
+            # 3 Criteria for next selection in greedy implementation:
+            # Must be the shortest path,
+            # Not equal to 0,
+            # & Not the index of previously used city
+            if current_dist < shortest_path and current_dist != 0:
+                if valid_tour_list(cities, tour, distance_idx):
+                    shortest_path = cities.get(current_city)[distance_idx]
+                    shortest_path_idx = distance_idx
 
-            if distance < shortest_path and distance != 0:
-                if not is_in_tour_list(
-                        cities,
-                        tour,
-                        cities.get(current_city).index(distance)
-                ):
-                    shortest_path = distance
-
-        shortest_path_idx = cities.get(current_city).index(shortest_path)
+        # Appending city at the shortest_path_idx to our tour
         shortest_path_city = list(cities.items())[shortest_path_idx][0]
         tour.append(shortest_path_city)
-
-
-    # Determines the key/name of lowest distance to next city available
-    # least_dist_idx = cities.get(current_city).index(shortest_path)
-    # print(list(cities.items())[least_dist_idx][0])
-
-    # If distance in tour list -> do none
-    # if distance not in tour list -> add next city
     return tour
 
 
-#tsp_greedy("seven_cities_names.txt", "seven_cities_dist.txt")
+city_name_file = "seven_cities_names.txt"
+city_dist_file = "seven_cities_dist.txt"
 
-tour_complete = tsp_greedy("thirty_cities_names.txt", "thirty_cities_dist.txt")
-print(f'Tour\n{tour_complete}\n'
-      f'Total dist: {count_distance(tour_complete, txt_files_to_dict("thirty_cities_names.txt", "thirty_cities_dist.txt"))}'
-      )
+cities_info = txt_files_to_dict(city_name_file, city_dist_file)
+final_tour = tsp_greedy(city_name_file, city_dist_file)
+
+print(f'Final tour length= {len(final_tour)}')
+print(f'Final Tour:\n{final_tour}\n')
+print(f'Distance = {count_distance(final_tour, cities_info)}')
+
+# tour_complete = \
+#     tsp_greedy("thirty_cities_names.txt", "thirty_cities_dist.txt")
+#
+# print(f'Tour\n{tour_complete}\n' +
+#       f'Total dist: ' +
+#       f'{count_distance(tour_complete, txt_files_to_dict("thirty_cities_names.txt", "thirty_cities_dist.txt"))}'
+#       )
 
 
