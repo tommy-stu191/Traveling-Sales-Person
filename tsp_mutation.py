@@ -1,5 +1,6 @@
 import random
 
+
 def txt_files_to_dict(names_txt_file, dist_txt_file):
     """
     Helper Function
@@ -53,7 +54,6 @@ def txt_files_to_dict(names_txt_file, dist_txt_file):
 def count_distance(tour_list, cities_dictionary):
     """
     Helper Function
-
     :param tour_list: The list containing the order of cities traveled.
     :param cities_dictionary: The dictionary containing all cities and their distances to each other.
     :return: The sum of distance traveled.
@@ -86,7 +86,6 @@ def count_distance(tour_list, cities_dictionary):
 def is_in_tour_list(cities, tour, city_idx):
     """
     Checks if the shortest_distance index is apart of a previously used city in a tour.
-
     :param cities: City/Distance dictionary
     :param tour: Current tour
     :param city_idx: index of potential next city in dictionary value list
@@ -97,6 +96,7 @@ def is_in_tour_list(cities, tour, city_idx):
         return True
     return False
 
+
 def mutate(tour):
     """
     :param tour: given tour list to be mutated
@@ -104,10 +104,9 @@ def mutate(tour):
     """
     first = random.randint(0, len(tour)-1)
     second = random.randint(0, len(tour)-1)
-    temp = tour[first]
-    tour[first] = tour[second]
-    tour[second] = temp
+    (tour[first], tour[second]) = (tour[second], tour[first])
     return tour
+
 
 def tsp_mutation(name_file, distance_file):
     """
@@ -115,47 +114,44 @@ def tsp_mutation(name_file, distance_file):
     :param distance_file: text file with distances between cities as they appear on name file
     :return: a tour of the cities with the smallest distance found via mutation algorithm
     """
-    #convert text files to usable dictionary for our purposes
+    # Convert text files to usable dictionary for our purposes
     cities = txt_files_to_dict(name_file, distance_file)
-    #initialize a tour for mutating
+    # Initialize a tour for mutating
     tour = list()
-    #list of potential solutions that we will compare at the end
+    # List of potential solutions that we will compare at the end
     potential_solutions = list()
-    best_solution = list()
+    best_solution = list(cities.keys())
+    # Creating an initial tour
     for city in cities:
         tour.append(city)
-    # begin mutation process
-    # this is our termination criteria
-    while len(potential_solutions)<5:
-        #copy for stagnation comparison
+    # Begin mutation process
+    # This is our termination criteria
+    while len(potential_solutions) < 5:
+        # Copy for stagnation comparison
         original_tour_copy = tour.copy()
         for x in range(0, 100):
-            # this function performs the desired mutation
-            child = mutate(tour)
-            #check to see if mutation is better than original
+            # This function performs the desired mutation
+            child = mutate(tour.copy())
+
+            # Check to see if mutation is better than original
             if count_distance(child, cities) < count_distance(tour, cities):
-                #update original
-                tour = copy
-        #check for stagnation after a genreration
-        if tour == original_tour_copy:
-            potential_solutions.append(tour)
-            #perform 3 mutations and continue with while loop
-            first = mutate(tour)
-            second = mutate(first)
-            last = mutate(second)
-            tour = last
-    #find best solution in potential solutions
+                # Update original
+                tour = child
+
+        # Check for stagnation after a generation
+        if count_distance(tour, cities) == count_distance(original_tour_copy, cities):
+            copy_of_tour = tour.copy()
+            potential_solutions.append(copy_of_tour)
+            # Perform 3 mutations and continue with while loop
+            tour = mutate(mutate(mutate(tour)))
+
+    # Finding the best solution in potential solutions
     for item in potential_solutions:
-        if not best_solution:
+        if count_distance(item, cities) < count_distance(best_solution, cities):
             best_solution = item
             distance = count_distance(best_solution, cities)
-        elif count_distance(item, cities)<count_distance(best_solution, cities):
-            best_solution = item
-            distance = count_distance(best_solution, cities)
+
     return best_solution, distance
 
-print(tsp_mutation("seven_cities_names.txt", "seven_cities_dist.txt"))
 
-
-
-
+print(tsp_mutation("thirty_cities_names.txt", "thirty_cities_dist.txt"))
