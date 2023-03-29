@@ -1,0 +1,29 @@
+﻿3/14/23
+2-3:40
+* Worked on pseudocode for tsp_greedy(), tsp_mutation(), & tsp_backtracking functions *in class*
+
+
+3/16/23
+11:00 - 11:40
+* Finished up pseudocode for each function
+
+
+3/21/23
+2-3
+* Started on greedy function implementation
+
+
+3/23/23
+2-3:30
+* Finished greedy implementation/Made a plan for mutation & backtracking implementations
+
+
+3/28/23
+2-3:30
+* Bug fixes for greedy, mutation, & backtracking
+* Cleaned up our codebase as well as made plans for turning in project
+
+
+3/29/23
+12-1
+* Fixed a last minute bug in greedy implementation as well as added a few extra comments
