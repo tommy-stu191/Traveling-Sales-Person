@@ -85,22 +85,19 @@ def count_distance(tour_list, cities_dictionary):
 
     return total_distance
 
-
-def is_in_tour_list(cities, tour, city_idx):
+def valid_tour_list(cities, tour, distance_idx):
     """
-    Helper Function
     Checks if the shortest_distance index is a part of a previously used city in a tour.
+
     :param cities: City/Distance dictionary
     :param tour: Current tour
-    :param city_idx: index of potential next city in dictionary value list
-    :return: Boolean value
+    :param distance_idx: index of potential next city in dictionary value list
+    :return:
     """
-    # Creating a list of main dictionary keys and using indexing to select the "current city"
-    current_city = list(cities.items())[city_idx][0]
-    # If the current city is already in the tour, return true
+    current_city = list(cities.items())[distance_idx][0]
     if current_city in tour:
-        return True
-    return False
+        return False
+    return True
 
 
 def mutate(tour):
@@ -121,51 +118,39 @@ def mutate(tour):
 
 def tsp_greedy(name_file, distance_file):
     """
-    Main Function
-    This function uses the Greedy Algorithm to find a solution to the Traveling Salesman Problem.
-    :param name_file: The *.txt file containing the city names in order.
-    :param distance_file: The *.txt file containing the distances from one city to another, in order.
-    :return: A list of city names (strings) that has the shortest distance.
+    Implements greedy search algorithm in order to solve Traveling Sales Person problem
+    :str name_file: location of city names .txt file
+    :str distance_file: location of distance .txt file
+    :return:
     """
     # Convert files to usable data
-    # --> txt_files_to_dict()
     cities = txt_files_to_dict(name_file, distance_file)
     # Initializing tour with starting city
     tour = list()
-    # Forcing the FIRST city to the tour
     tour.append(list(cities.keys())[0])
 
-    # Will loop until tour has used all available cities
+    # Main loop - builds tsp tour solution with greedy implementation
     while len(tour) < len(cities):
-        # Initializing the shortest path and selecting the current city as the last city in the tour list
-        shortest_path = 130000
+        # Updating/Initializing shortest_path & current_city
+        shortest_path = 13000
         current_city = tour[-1]
-        # Looping over each distance related to the current city
-        for distance in cities.get(current_city):
+        # Looping through all distance values within current_city in cities dictionary
+        for distance_idx in range(0, len(cities.get(current_city))):
+            # checking current distance based on idx
+            current_dist = cities.get(current_city)[distance_idx]
 
-            # potential methods of determining if smallest dist found is not in tour list yet
-            # A) Keep track of used index values >> pass over used indices when
-            # finding next shortest distance(starting with idx 0 for alpha)
-            #
+            # 3 Criteria for next selection in greedy implementation:
+            # Must be the shortest path,
+            # Not equal to 0,
+            # & Not the index of previously used city
+            if current_dist < shortest_path and current_dist != 0:
+                if valid_tour_list(cities, tour, distance_idx):
+                    shortest_path = cities.get(current_city)[distance_idx]
+                    shortest_path_idx = distance_idx
 
-            if distance < shortest_path and distance != 0:
-                if not is_in_tour_list(
-                        cities,
-                        tour,
-                        cities.get(current_city).index(distance)
-                ):
-                    shortest_path = distance
-
-        shortest_path_idx = cities.get(current_city).index(shortest_path)
+        # Appending city at the shortest_path_idx to our tour
         shortest_path_city = list(cities.items())[shortest_path_idx][0]
         tour.append(shortest_path_city)
-
-    # Determines the key/name of the lowest distance to next city available
-    # least_dist_idx = cities.get(current_city).index(shortest_path)
-    # print(list(cities.items())[least_dist_idx][0])
-
-    # If distance in tour list -> do none
-    # if distance not in tour list -> add next city
     return tour
 
 

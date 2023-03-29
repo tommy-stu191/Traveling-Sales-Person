@@ -135,8 +135,8 @@ def tsp_greedy(name_file, distance_file):
     return tour
 
 
-city_name_file = "seven_cities_names.txt"
-city_dist_file = "seven_cities_dist.txt"
+city_name_file = "thirty_cities_names.txt"
+city_dist_file = "thirty_cities_dist.txt"
 
 cities_info = txt_files_to_dict(city_name_file, city_dist_file)
 final_tour = tsp_greedy(city_name_file, city_dist_file)
